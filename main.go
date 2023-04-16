@@ -1,6 +1,7 @@
 package main
 
 import (
+	"books-api-pg-gorm/entity"
 	"fmt"
 	"log"
 	"os"
@@ -47,5 +48,7 @@ func init() {
 }
 
 func main() {
+
+	db.Debug().AutoMigrate(&entity.Book{})
 
 }
