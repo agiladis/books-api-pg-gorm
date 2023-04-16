@@ -2,6 +2,7 @@ package main
 
 import (
 	"books-api-pg-gorm/entity"
+	"books-api-pg-gorm/router"
 	"fmt"
 	"log"
 	"os"
@@ -50,5 +51,7 @@ func init() {
 func main() {
 
 	db.Debug().AutoMigrate(&entity.Book{})
+
+	router.StartServer(db.Debug()).Run(":8080")
 
 }
