@@ -17,7 +17,7 @@ type BookCreateDto struct {
 	Author   string `json:"author" binding:"required"`
 }
 
-func (bk *BookController) CreateBook(ctx *gin.Context) {
+func (bc *BookController) CreateBook(ctx *gin.Context) {
 	var (
 		bookCreateDto BookCreateDto = BookCreateDto{}
 		result        entity.Book
@@ -36,7 +36,7 @@ func (bk *BookController) CreateBook(ctx *gin.Context) {
 		Author:   bookCreateDto.Author,
 	}
 
-	if result, err = bk.BookService.Create(book); err != nil {
+	if result, err = bc.BookService.Create(book); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
@@ -47,4 +47,24 @@ func (bk *BookController) CreateBook(ctx *gin.Context) {
 		"data": result,
 	})
 
+}
+
+func (bc *BookController) GetAllBook(ctx *gin.Context) {
+	var (
+		books = []entity.Book{}
+		err   error
+	)
+
+	books, err = bc.BookService.GetAll()
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"message": "data not found",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": books,
+	})
 }
