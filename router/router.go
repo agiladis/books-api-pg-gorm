@@ -18,6 +18,7 @@ func StartServer(db *gorm.DB) *gin.Engine {
 	}
 
 	app := gin.Default()
+	app.POST("/books", bookController.CreateBook)
 
 	return app
 }
