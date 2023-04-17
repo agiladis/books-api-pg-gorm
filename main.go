@@ -18,7 +18,7 @@ const (
 	DB_PASSWORD = "postgres"
 	DB_HOST     = "localhost"
 	DB_PORT     = "5432"
-	DB_DATABASE = "db_book"
+	DB_DATABASE = "db_book_app"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 )
 
 func init() {
-	// postgres://postgres:postgres@localhost:5432/db_book?sslmode=disable
+	// postgres://postgres:postgres@localhost:5432/db_book_app?sslmode=disable
 	connString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE)
 
 	db, err = gorm.Open(postgres.Open(connString), &gorm.Config{

@@ -7,7 +7,6 @@ type BookController struct {
 }
 
 type BookCreateDto struct {
-	Title       string `json:"title" binding:"required"`
-	Author      string `json:"author" binding:"required"`
-	Description string `json:"description"`
+	NameBook string `json:"name_book" binding:"required"`
+	Author   string `json:"author" binding:"required"`
 }
