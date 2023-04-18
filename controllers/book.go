@@ -49,7 +49,7 @@ func (bc *BookController) CreateBook(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusCreated, gin.H{
 		"data": result,
 	})
 
@@ -88,6 +88,7 @@ func (bc *BookController) GetBookById(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "id not found",
 		})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
@@ -128,5 +129,21 @@ func (bc *BookController) UpdateBookById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusAccepted, gin.H{
 		"data": result,
+	})
+}
+
+func (bc *BookController) DeleteBookById(ctx *gin.Context) {
+	bookId := ctx.Param("id")
+	bookIdInt, _ := strconv.Atoi(bookId)
+
+	if err := bc.BookService.Delete(uint(bookIdInt)); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "id not found",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "book deleted successfully",
 	})
 }

@@ -52,3 +52,13 @@ func (bs *BookService) Update(id uint, book entity.Book) (entity.Book, error) {
 
 	return newBook, nil
 }
+
+func (bs *BookService) Delete(id uint) error {
+	var book entity.Book
+
+	if err := bs.DB.Where("id = ?", id).Delete(&book).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

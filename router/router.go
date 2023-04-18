@@ -22,6 +22,7 @@ func StartServer(db *gorm.DB) *gin.Engine {
 	app.POST("/books", bookController.CreateBook)
 	app.GET("/books/:id", bookController.GetBookById)
 	app.PUT("/books/:id", bookController.UpdateBookById)
+	app.DELETE("/books/:id", bookController.DeleteBookById)
 
 	return app
 }
