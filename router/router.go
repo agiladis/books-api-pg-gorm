@@ -20,6 +20,8 @@ func StartServer(db *gorm.DB) *gin.Engine {
 	app := gin.Default()
 	app.GET("/books", bookController.GetAllBook)
 	app.POST("/books", bookController.CreateBook)
+	app.GET("/books/:id", bookController.GetBookById)
+	app.PUT("/books/:id", bookController.UpdateBookById)
 
 	return app
 }

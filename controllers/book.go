@@ -4,6 +4,7 @@ import (
 	"books-api-pg-gorm/entity"
 	"books-api-pg-gorm/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +16,11 @@ type BookController struct {
 type BookCreateDto struct {
 	NameBook string `json:"name_book" binding:"required"`
 	Author   string `json:"author" binding:"required"`
+}
+
+type BookUpdateDto struct {
+	NameBook string `json:"name_book"`
+	Author   string `json:"author"`
 }
 
 func (bc *BookController) CreateBook(ctx *gin.Context) {
@@ -66,5 +72,61 @@ func (bc *BookController) GetAllBook(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": books,
+	})
+}
+
+func (bc *BookController) GetBookById(ctx *gin.Context) {
+	var (
+		bookId = ctx.Param("id")
+		book   entity.Book
+	)
+
+	bookIdInt, _ := strconv.Atoi(bookId)
+	book, err := bc.BookService.GetBookById(uint(bookIdInt))
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": "id not found",
+		})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": book,
+	})
+
+}
+
+func (bc *BookController) UpdateBookById(ctx *gin.Context) {
+	var (
+		bookUpdateDto BookUpdateDto = BookUpdateDto{}
+		result        entity.Book
+		err           error
+	)
+
+	if err := ctx.ShouldBindJSON(&bookUpdateDto); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	bookId := ctx.Param("id")
+	bookIdInt, _ := strconv.Atoi(bookId)
+	book := entity.Book{
+		NameBook: bookUpdateDto.NameBook,
+		Author:   bookUpdateDto.Author,
+	}
+
+	result, err = bc.BookService.Update(uint(bookIdInt), book)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusAccepted, gin.H{
+		"data": result,
 	})
 }
